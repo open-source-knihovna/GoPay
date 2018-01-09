@@ -31,7 +31,7 @@ Alias /plugin/ "/var/lib/koha/kohadev/plugins/"
 ```
 * Načtěte aktuální konfiguraci webserveru příkazem `sudo service apache2 reload`
 
-Jakmile je nastavení připraveno, budete potřebovat změnit systémovou konfigurační hodnotu UseKohaPlugins v administraci Kohy. Na stránce Nástroje pak najdete odkaz Zásuvné moduly. Aktuální verzi pluginu [stahujte v sekci Releases](https://github.com/open-source-knihovna/GoPay/releases).
+Jakmile je nastavení připraveno, budete potřebovat změnit systémovou konfigurační hodnotu UseKohaPlugins v administraci Kohy. Aktuální verzi modulu [stahujte v sekci Releases](https://github.com/open-source-knihovna/GoPay/releases).
 
 ## Nastavení specifické pro modul
 
