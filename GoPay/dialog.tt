@@ -1,0 +1,47 @@
+[% USE Koha %]
+
+[% INCLUDE 'doc-head-open.inc' %]
+[% INCLUDE 'doc-head-close.inc' %]
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        $('#gopay-errors').modal('show');
+[% IF (return_url) %]
+        $('#gopay-errors').on("hidden.bs.modal", function () {
+            window.location = "[% return_url %]";
+        });
+[% END %]
+    });
+//]]>
+</script>
+
+<body id="opac-account" class="scrollto">
+
+<div class="main">
+
+    <div id="gopay-errors" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">[% IF (error) %]Chyba[% ELSE %]Zpráva[% END %]</h5>
+          </div>
+          <div class="modal-body">
+            [% IF (error) %]
+                <p>Požadavek na online platbu byl odmítnut z důvodu jedné nebo více chyb:</p>
+                <ul>
+                [% FOREACH m IN report %]<li>[% m.message %]</li>[% END %]
+                </ul>
+            [% ELSE %]
+            <p>[% report %]</p>
+            [% END %]
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Zavřít</button>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+</div> <!-- / .main -->
+
+[% INCLUDE 'intranet-bottom.inc' %]

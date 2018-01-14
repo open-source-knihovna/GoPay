@@ -1,0 +1,179 @@
+[% INCLUDE 'doc-head-open.inc' %]
+ <title>Koha: Platební brána GoPay: Konfigurace</title>
+[% INCLUDE 'doc-head-close.inc' %]
+ <link href="[% PLUGIN_PATH %]/css/gopay.css" rel="stylesheet" type="text/css" />
+ <script type="text/javascript">
+//<![CDATA[
+
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $('#confirm-delete').on('show.bs.modal', function(e) {
+                 $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+            });
+
+            $(document).ready(function(){
+                var obj = $( "#borrowernumber" ).autocomplete({
+                    source: "/cgi-bin/koha/circ/ysearch.pl",
+                    minLength: 3,
+                    select: function( event, ui ) {
+                        $( "#borrowernumber" ).val( ui.item.borrowernumber );
+                        return false;
+                    }
+                }).data( "ui-autocomplete" );
+                if( obj ) {
+                    obj._renderItem = function( ul, item ) {
+                        return $( "<li></li>" )
+                        .data( "ui-autocomplete-item", item )
+                        .append( "<a>" + item.surname + ", " + item.firstname + " (" + item.cardnumber + ") <small>" + item.dateofbirth + " " + item.address + " " + item.city + " " + item.zipcode + " " + item.country + "</small></a>" )
+                        .appendTo( ul );
+                    };
+                }
+            });
+
+        });
+//]]>
+</script>
+
+</head>
+<body>
+[% INCLUDE 'header.inc' %]
+<div id="breadcrumbs">
+    <a href="/cgi-bin/koha/mainpage.pl">Koha</a> &rsaquo;
+    <a href="/cgi-bin/koha/tools/tools-home.pl">Nástroje</a> &rsaquo;
+    <a href="/cgi-bin/koha/plugins/plugins-home.pl">Zásuvné moduly</a> &rsaquo;
+    Konfigurace platební brány GoPay
+</div>
+
+<div id="doc3" class="rbit-plugin">
+    <div class="logo-links">
+        <a href="https://www.koha.cz" target="_blank"><img src="[% PLUGIN_PATH %]/koha_cz.png" /></a>
+        <a href="https://www.koha-v-knihovne.cz" target="_blank"><img src="[% PLUGIN_PATH %]/logo.png" /></a>
+        <a href="https://www.mkcr.cz" target="_blank"><img src="[% PLUGIN_PATH %]/logo_mkcr.png" /></a>
+    </div>
+
+    <h3>Platební brána GoPay: Konfigurace</h3>
+
+    <!-- Notice our form here has no 'action', this is good, it means that our forms will always get passed back to 'plugins/run.pl'. -->
+    <form method="post">
+        <!-- Always pass these two parameters so the plugin system knows what to execute! -->
+        <input type="hidden" name="class" value="[% CLASS %]"/>
+        <input type="hidden" name="method" value="[% METHOD %]"/>
+
+        <fieldset class="rows">
+        <legend>Nastavení platební brány</legend>
+
+        <ol>
+            <li>
+                <label class="form-field-label" for="gopay_server">Brána GoPay</label>
+                <select name="gopay_server">
+                    <option value="production"[% IF (gopay_server && gopay_server == 'production') %] selected[% END %]>Produkční</option>
+                    <option value="test"[% IF (!gopay_server || gopay_server != 'production') %] selected[% END %]>Testovací</option>
+                </select>
+            </li>
+
+            <li>
+                <label class="form-field-label" for="goid">GoID</label>
+                <input type="text" name="goid" value="[% goid %]" />
+            </li>
+
+            <li>
+                <label class="form-field-label" for="clientid">Client ID</label>
+                <input type="text" name="clientid" value="[% clientid %]" />
+            </li>
+
+            <li>
+                <label class="form-field-label" for="clientsecret">Client Secret</label>
+                <input type="text" name="clientsecret" value="[% clientsecret %]" />
+            </li>
+        </ol>
+        </fieldset>
+
+        <p>
+            <input type="hidden" name="phase" value="save_gopay" />
+            <input type="submit" value="Uložit nastavení" />
+        </p>
+    </form>
+
+    <form method="post">
+        <!-- Always pass these two parameters so the plugin system knows what to execute! -->
+        <input type="hidden" name="class" value="[% CLASS %]"/>
+        <input type="hidden" name="method" value="[% METHOD %]"/>
+
+        <fieldset class="rows">
+        <legend>Klientské přístupy k API Kohy</legend>
+        <ol>
+            <li>
+                <label class="form-field-label" for="borrowernumber">Číslo čtenáře</label>
+                <input type="text" name="borrowernumber" id="borrowernumber" value="">
+                <i class="fa fa-lg fa-question-circle" data-toggle="tooltip" title="V tomto poli funguje našeptávač, kterým lze snadno najít požadované číslo zadáním jména čtenáře."></i>
+            </li>
+
+            <li>
+                <label class="form-field-label" for="secret">Přístupový klíč</label>
+                <input type="text" name="secret" value="" id="secret" />
+            </li>
+
+            <li>
+        [% IF (api_clients) %]
+            <table id="table_reports">
+                <thead>
+                    <tr>
+                        <th>Číslo čtenáře</th>
+                        <th>Jméno</th>
+                        <th>Uživatelské jméno</th>
+                        <th>Přístupový klíč</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                [% FOREACH client IN api_clients %]
+                    <tr>
+                        <td>[% client.borrowernumber %]</td>
+                        <td>[% client.firstname %] [% client.surname %]</td>
+                        <td>[% client.userid %]</td>
+                        <td>[% client.secret  %]</td>
+                        <td>
+                                    <a class="btn btn-default btn-xs" role="button" data-toggle="modal" data-target="#confirm-delete"
+                                        href="#" data-href="/cgi-bin/koha/plugins/run.pl?class=Koha::Plugin::Com::RBitTechnology::GoPay&amp;method=configure&amp;phase=delete&amp;client_id=[% client.client_id %]"><i
+                                        class="fa fa-trash"></i> Odstranit</a>
+                        </td>
+                    <tr>
+                [% END %]
+                </tbody>
+            </table>
+        [% ELSE %]
+            <div class="dialog message">
+                <h4>Dosud neexistují přístupové účty</h4>
+                <p>Pokud chcete umožnit online platby prostřednictvím API, vytvořte alespoň jeden účet.</p>
+            </div>
+        [% END %]
+            </li>
+        </ol>
+        </fieldset>
+
+        <p>
+            <input type="hidden" name="phase" value="save_clients" />
+            <input type="submit" value="Vytvořit přístup k API" />
+        </p>
+    </form>
+
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Odstranění přístupového účtu</h5>
+            </div>
+            <div class="modal-body">
+                Odstraněním účtu znemožníte tomuto klientovi přístup k platebnímu rozhraní.<br>Opravdu si přejete účet smazat?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ne</button>
+                <a class="btn btn-danger btn-ok">Ano, smazat</a>
+            </div>
+        </div>
+    </div>
+</div>
+[% INCLUDE 'intranet-bottom.inc' %]

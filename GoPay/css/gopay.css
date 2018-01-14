@@ -1,0 +1,12 @@
+.rbit-plugin .logo-links { margin-bottom: 2.5em; }
+.rbit-plugin .logo-links a img { border: 1px solid transparent; }
+.rbit-plugin .logo-links a:hover img { border: 1px solid #DEDEDE; }
+.rbit-plugin fieldset { margin-bottom: 1em; }
+.rbit-plugin fieldset.rows label, .rbit-plugin label { width: 10em; display: inline-block; text-align: right; margin-right: 1em; }
+.rbit-plugin span.appended-label { margin: 0 1em; }
+.rbit-plugin .form-field { margin: 5px 0; }
+.rbit-plugin .form-field > * { vertical-align: middle; }
+.rbit-plugin input.on-off { margin: 0 1em; }
+.rbit-plugin input[type="number"] { width: 5em; }
+.rbit-plugin .hint { font-style: italic; color: #555555; }
+.rbit-plugin label.radio-label { width: auto; padding-left: 0.5em; }
