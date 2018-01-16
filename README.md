@@ -14,7 +14,7 @@ Zásuvný modul 'GoPay' implementuje možnost platit uživatelům knihovny popla
 
 Institut zásuvných modulů umožňuje rozšiřovat vlastnosti knihovního systému Koha dle specifických požadavků konkrétní knihovny. Zásuvný modul se instaluje prostřednictvím balíčku KPZ (Koha Plugin Zip), který obsahuje všechny potřebné soubory pro správné fungování modulu.
 
-POZOR: U tohoto zásuvného modulu je nutné stáhnout ze stejného místa ještě pay_api.zip. Ten rozzipujte a obsažený soubor zkopíujte do adresáře .../koha/svc/. Vlastníka (příkaz chown) a práva k souboru definujte stejně, jako mají ostatní soubory v tomto adresáři.
+**POZOR: Pokud nepoužíváte instalační balíčky KohaCZ budete muse na svůj server vložit soubor, který umožní propojit Kohu a zásuvný modul. Jde o pay_api.zip a stáhnout jej můžete ze stejného místa jako samotný modul. Archiv rozzipujte a obsažený soubor zkopíujte do adresáře .../koha/svc/. Vlastníka (příkaz chown) a práva k souboru (příkaz chmod) definujte stejně, jako mají ostatní soubory v tomto adresáři. Tato procedura se vás netýká, pokud používáte balíček KohaCZ.**
 
 Pro využití zásuvných modulů je nutné, aby správce systému tuto možnost povolil v nastavení.
 
